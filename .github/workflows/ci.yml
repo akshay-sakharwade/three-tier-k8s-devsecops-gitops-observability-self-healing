@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-scan-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Docker Hub login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build frontend image
+        run: docker build -t akshayd8/three-tier-frontend:${{ github.sha }} ./frontend
+
+      - name: Build backend image
+        run: docker build -t akshayd8/three-tier-backend:${{ github.sha }} ./backend
+
+      - name: Trivy scan frontend
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: akshayd8/three-tier-frontend:${{ github.sha }}
+          format: table
+          exit-code: "1"
+          severity: "CRITICAL,HIGH"
+
+      - name: Trivy scan backend
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: akshayd8/three-tier-backend:${{ github.sha }}
+          format: table
+          exit-code: "1"
+          severity: "CRITICAL,HIGH"
+
+      - name: Push frontend
+        run: docker push akshayd8/three-tier-frontend:${{ github.sha }}
+
+      - name: Push backend
+        run: docker push akshayd8/three-tier-backend:${{ github.sha }}
