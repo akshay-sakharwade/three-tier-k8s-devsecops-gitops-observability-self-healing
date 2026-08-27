@@ -34,7 +34,7 @@ jobs:
         run: docker build -t akshayd8/three-tier-backend:${{ github.sha }} ./backend
 
       - name: Trivy scan frontend
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: akshayd8/three-tier-frontend:${{ github.sha }}
           format: table
