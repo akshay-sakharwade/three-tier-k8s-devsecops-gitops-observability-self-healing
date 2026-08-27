@@ -42,7 +42,7 @@ jobs:
           severity: "CRITICAL,HIGH"
 
       - name: Trivy scan backend
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.35.0
         with:
           image-ref: akshayd8/three-tier-backend:${{ github.sha }}
           format: table
