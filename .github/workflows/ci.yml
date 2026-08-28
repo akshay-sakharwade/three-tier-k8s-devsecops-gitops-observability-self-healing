@@ -6,7 +6,8 @@ on:
   pull_request:
 
 jobs:
-  build-scan-push:
+  build-test-deploy:
+    name: Build, Test and Deploy
     runs-on: ubuntu-latest
 
     steps:
