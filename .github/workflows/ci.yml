@@ -34,22 +34,24 @@ jobs:
         run: docker build -t akshayd8/three-tier-backend:${{ github.sha }} ./backend
 
       - name: Trivy scan frontend
-        uses: aquasecurity/trivy-action@v0.35.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: akshayd8/three-tier-frontend:${{ github.sha }}
           format: table
           exit-code: "0"
           ignore-unfixed: true
           severity: "CRITICAL,HIGH"
+          cache: false
 
       - name: Trivy scan backend
-        uses: aquasecurity/trivy-action@v0.35.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: akshayd8/three-tier-backend:${{ github.sha }}
           format: table
           exit-code: "0"
           ignore-unfixed: true
           severity: "CRITICAL,HIGH"
+          cache: false
 
       - name: Push frontend
         run: docker push akshayd8/three-tier-frontend:${{ github.sha }}
