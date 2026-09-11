@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_USERNAME/YOUR_REPO.git
+    repoURL: https://github.com/akshay-sakharwade/three-tier-k8s-devsecops-gitops-observability-self-healing.git
     targetRevision: main
     path: k8s_manifests
   destination:
